@@ -2,39 +2,140 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Adventure Complete</title>
+  <title>Foodie Adventure Complete!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body class="page page-summary">
-  <main class="card">
-    <h1>Adventure Complete!</h1>
-    <p class="subtitle">You gathered all the ingredients for Italian Pasta & Spinach Bake.</p>
 
-    <section class="panel">
-      <h2>Your Ingredients</h2>
-      <ul id="ingredient-list"></ul>
-    </section>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 
-    <section class="panel">
-      <h2>Take the Recipe Home</h2>
-      <a class="primary-btn" href="pdf/italian_pasta_spinach_bake.pdf" target="_blank">View Recipe Card</a>
-    </section>
-
-    <a href="index.html" class="link-back">Start Over</a>
-  </main>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
   <script>
-    const list = document.getElementById('ingredient-list');
-    const saved = JSON.parse(localStorage.getItem('jj_foundIngredients') || '[]');
-    saved.forEach(name => {
-      const li = document.createElement('li');
-      li.textContent = name;
-      list.appendChild(li);
-    });
-
-    const finalAudio = new Audio('audio/chef12_final.mp3');
-    document.addEventListener('click', () => finalAudio.play().catch(()=>{}), { once: true });
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            fancy: ['Quicksand', 'sans-serif']
+          },
+          colors: {
+            jungleGreen: '#1B8A5A',
+            jungleGold: '#F3C969',
+            jungleRed: '#E94F37',
+            jungleCream: '#FAF4E6',
+          },
+          animation: {
+            fadeIn: "fadeIn 0.45s ease-out",
+            popIn: "popIn 0.5s ease-out",
+            shimmer: "shimmer 0.5s ease-in-out"
+          }
+        }
+      }
+    }
   </script>
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    body { font-family: 'Quicksand', sans-serif; }
+
+    /* Confetti Animation */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background-color: #fff;
+      animation: fall 3s linear forwards;
+      opacity: 0.9;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-20px) rotate(0deg); }
+      100% { transform: translateY(110vh) rotate(720deg); }
+    }
+  </style>
+
+</head>
+
+<body class="min-h-screen relative bg-gradient-to-br from-jungleGreen via-jungleCream to-jungleGold overflow-hidden">
+
+  <!-- Vines -->
+  <img src="img/vines_top_left.png" class="absolute top-0 left-0 w-32 opacity-60 pointer-events-none">
+  <img src="img/vines_top_right.png" class="absolute top-0 right-0 w-32 opacity-60 pointer-events-none">
+
+  <!-- MAIN CONTENT -->
+  <div class="w-full max-w-md mx-auto text-center mt-16 p-4 animate-fadeIn">
+
+    <img src="img/chefRossi.png"
+      class="w-32 h-32 mx-auto rounded-full shadow-xl ring-4 ring-white mb-4 animate-popIn">
+
+    <h1 class="text-3xl font-extrabold text-jungleRed drop-shadow mb-3 animate-popIn">
+      🎉 Adventure Complete! 🎉
+    </h1>
+
+    <p class="text-lg text-gray-700 mb-4 animate-slideIn">
+      You found all the ingredients for:
+    </p>
+
+    <h2 class="text-2xl font-bold text-jungleGreen mb-6 animate-popIn">
+      Italian Pasta & Spinach Bake
+    </h2>
+
+    <!-- Summary Card -->
+    <div class="bg-white/90 rounded-3xl p-6 shadow-xl text-left animate-shimmer">
+      <h3 class="text-xl font-semibold text-jungleRed mb-3">Ingredients Found:</h3>
+
+      <ul class="space-y-3 text-gray-700">
+        <li>🍝 Garofalo Pasta</li>
+        <li>🍅 Italian Pasta Sauce</li>
+        <li>🧀 Mozzarella Cheese</li>
+        <li>🧀 Parmesan Cheese</li>
+        <li>🧂 Garlic Salt</li>
+        <li>🥬 Fresh Spinach</li>
+      </ul>
+
+      <img src="img/final_dish.jpg"
+        class="w-full rounded-xl mt-6 shadow-md" 
+        alt="Final Dish Image (Optional)">
+    </div>
+
+    <!-- Buttons -->
+    <div class="mt-8 space-y-4">
+
+      <a href="recipe.pdf" download
+        class="block w-full bg-jungleGreen text-white text-lg font-semibold py-3 rounded-xl shadow-lg active:scale-95 transition">
+        📄 Download Recipe
+      </a>
+
+      <a href="index.html"
+        class="block w-full bg-white text-jungleGreen border border-jungleGreen text-lg font-semibold py-3 rounded-xl shadow active:scale-95 transition">
+        🔁 Restart Adventure
+      </a>
+
+    </div>
+
+  </div>
+
+  <!-- Confetti Script -->
+  <script>
+    function launchConfetti() {
+      for (let i = 0; i < 80; i++) {
+        let c = document.createElement("div");
+        c.classList.add("confetti");
+
+        c.style.left = Math.random() * 100 + "vw";
+        c.style.backgroundColor = ["#F3C969", "#E94F37", "#1B8A5A", "#ffffff"][Math.floor(Math.random()*4)];
+        c.style.animationDelay = Math.random() * 0.5 + "s";
+        c.style.transform = "rotate(" + (Math.random()*360) + "deg)";
+
+        document.body.appendChild(c);
+
+        setTimeout(() => c.remove(), 3200);
+      }
+    }
+
+    // Launch confetti on page load
+    setTimeout(launchConfetti, 300);
+  </script>
+
 </body>
 </html>
