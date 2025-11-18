@@ -42,6 +42,35 @@
     const wrapper = document.getElementById("screen-wrapper");
     let step = 0;
 
+    /* -------------------
+       UTIL: NARRATION BOX
+    ---------------------- */
+    function narrationBox(text) {
+      return `
+        <div class="bg-white/80 rounded-xl p-4 mt-4 shadow-md text-left">
+          <p class="text-gray-700 leading-relaxed" id="narrationText">${text}</p>
+
+          <button id="toggleNarration"
+            class="text-jungleGreen font-semibold mt-2 underline">
+            Hide narration
+          </button>
+        </div>
+      `;
+    }
+
+    function enableNarrationToggle() {
+      const narration = document.getElementById("narrationText");
+      const toggle = document.getElementById("toggleNarration");
+
+      let isShown = true;
+
+      toggle.addEventListener("click", () => {
+        isShown = !isShown;
+        narration.style.display = isShown ? "block" : "none";
+        toggle.textContent = isShown ? "Hide narration" : "Show narration";
+      });
+    }
+
     /* ---------- INTRO SCREEN ---------- */
     function renderStartScreen() {
       wrapper.innerHTML = `
@@ -56,16 +85,20 @@
             Jungle Jim's International<br>Foodie Adventure
           </h1>
 
-          <p class="text-gray-700 mb-6 text-lg">
-            Explore the store, discover new flavors, and collect ingredients for a delicious journey.
-          </p>
-
           <button id="startBtn"
-            class="w-full bg-jungleGreen text-white text-lg font-bold rounded-xl px-6 py-3 shadow-lg active:scale-95 transition">
+            class="w-full bg-jungleGreen text-white text-lg font-bold rounded-xl px-6 py-3 shadow-lg active:scale-95 transition mb-4">
             Tap to Begin
           </button>
+
+          ${narrationBox(`
+            “Ciao, adventurer! I’m Chef Giovanni Rossi — 
+            your Globe-Trotting Gourmet! Welcome to Jungle Jim’s International 
+            Foodie Adventure. Tap to begin your journey!”
+          `)}
         </div>
       `;
+
+      enableNarrationToggle();
 
       document.getElementById("startBtn").addEventListener("click", () => {
         document.getElementById("audio-welcome").play().catch(() => {});
@@ -84,25 +117,28 @@
           </div>
 
           <h2 class="text-2xl font-semibold text-jungleRed mb-2">Choose Your Cuisine</h2>
-          <p class="text-gray-700 mb-4">For this demo, select <strong>Italian</strong>.</p>
 
           <button id="chooseItalian"
             class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-2 shadow active:scale-95">
             Italian
           </button>
 
-          <button disabled
-            class="w-full bg-gray-300 text-gray-500 font-semibold rounded-lg py-3 mt-2 opacity-50">
+          <button disabled class="w-full bg-gray-300 text-gray-500 rounded-lg py-3 mt-2 opacity-50">
             Mexican
           </button>
 
-          <button disabled
-            class="w-full bg-gray-300 text-gray-500 font-semibold rounded-lg py-3 mt-2 opacity-50">
+          <button disabled class="w-full bg-gray-300 text-gray-500 rounded-lg py-3 mt-2 opacity-50">
             Chinese
           </button>
 
+          ${narrationBox(`
+            “Where in the world do your taste buds want to travel today? 
+            For this demo, choose Italian and let’s begin cooking up adventure!”
+          `)}
         </div>
       `;
+
+      enableNarrationToggle();
 
       document.getElementById("chooseItalian").addEventListener("click", () => {
         document.getElementById("audio-cuisine").play().catch(() => {});
@@ -122,16 +158,19 @@
 
           <h2 class="text-2xl font-semibold text-jungleRed mb-2">Any Allergies?</h2>
 
-          <p class="text-gray-700 mb-4">
-            In the full version, shoppers will select allergens. For this demo, tap:
-          </p>
-
           <button id="noAllergiesBtn"
-            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 shadow active:scale-95">
+            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-2 shadow active:scale-95">
             I do not have any allergies
           </button>
+
+          ${narrationBox(`
+            “Before we start cooking, do you have any allergies I should know about? 
+            For this demo, select ‘I do not have any allergies.’”
+          `)}
         </div>
       `;
+
+      enableNarrationToggle();
 
       document.getElementById("noAllergiesBtn").addEventListener("click", () => {
         document.getElementById("audio-allergies").play().catch(() => {});
