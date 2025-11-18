@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <title>Jungle Jim's International Foodie Adventure</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
+
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -27,39 +27,41 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body class="bg-jungleCream min-h-screen flex flex-col items-center justify-center p-4">
+<body class="min-h-screen flex flex-col items-center justify-center p-4 
+             bg-gradient-to-br from-jungleGreen via-jungleCream to-jungleGold">
 
   <!-- WRAPPER -->
   <div id="screen-wrapper" class="w-full max-w-md mx-auto text-center"></div>
 
-  <!-- AUDIO ELEMENTS -->
+  <!-- AUDIO -->
   <audio id="audio-welcome" src="audio/chef1_welcome.mp3"></audio>
   <audio id="audio-cuisine" src="audio/chef2_cuisine.mp3"></audio>
   <audio id="audio-allergies" src="audio/chef3_allergies.mp3"></audio>
 
   <script>
     const wrapper = document.getElementById("screen-wrapper");
-
-    // State
     let step = 0;
 
-    // Screens
+    /* ---------- INTRO SCREEN ---------- */
     function renderStartScreen() {
       wrapper.innerHTML = `
-        <div class="animate-fadeIn p-4">
-          <img src="img/chefRossi.png" alt="Chef Rossi"
-               class="w-48 h-auto mx-auto mb-4 drop-shadow-xl" />
+        <div class="animate-fadeIn bg-white/90 backdrop-blur-lg rounded-3xl p-6 shadow-xl">
+          
+          <div class="flex justify-center mb-4">
+            <img src="img/chefRossi.png" alt="Chef Rossi"
+              class="w-40 h-40 object-cover rounded-full ring-4 ring-white shadow-2xl animate-popIn" />
+          </div>
 
-          <h1 class="text-3xl font-extrabold text-jungleRed mb-4 leading-tight">
-            Jungle Jim's<br>International<br>Foodie Adventure
+          <h1 class="text-3xl font-extrabold text-jungleRed mb-3 leading-tight drop-shadow">
+            Jungle Jim's International<br>Foodie Adventure
           </h1>
 
           <p class="text-gray-700 mb-6 text-lg">
-            Explore the store, discover flavors, and collect ingredients for a real adventure meal.
+            Explore the store, discover new flavors, and collect ingredients for a delicious journey.
           </p>
 
           <button id="startBtn"
-            class="bg-jungleGreen text-white text-lg font-bold rounded-xl px-6 py-3 shadow-lg active:scale-95 transition">
+            class="w-full bg-jungleGreen text-white text-lg font-bold rounded-xl px-6 py-3 shadow-lg active:scale-95 transition">
             Tap to Begin
           </button>
         </div>
@@ -71,14 +73,17 @@
       });
     }
 
+    /* ---------- CUISINE SCREEN ---------- */
     function renderCuisineScreen() {
       wrapper.innerHTML = `
-        <div class="animate-fadeIn p-4">
-          <img src="img/chefRossi.png" alt="Chef Rossi"
-               class="w-40 h-auto mx-auto mb-4 drop-shadow-md" />
+        <div class="animate-fadeIn bg-white/90 backdrop-blur-lg rounded-3xl p-6 shadow-xl">
+
+          <div class="flex justify-center mb-4">
+            <img src="img/chefRossi.png" alt="Chef Rossi"
+              class="w-32 h-32 object-cover rounded-full ring-4 ring-white shadow-xl" />
+          </div>
 
           <h2 class="text-2xl font-semibold text-jungleRed mb-2">Choose Your Cuisine</h2>
-
           <p class="text-gray-700 mb-4">For this demo, select <strong>Italian</strong>.</p>
 
           <button id="chooseItalian"
@@ -105,11 +110,15 @@
       });
     }
 
+    /* ---------- ALLERGY SCREEN ---------- */
     function renderAllergyScreen() {
       wrapper.innerHTML = `
-        <div class="animate-fadeIn p-4">
-          <img src="img/chefRossi.png" alt="Chef Rossi"
-               class="w-40 h-auto mx-auto mb-4 drop-shadow-md" />
+        <div class="animate-fadeIn bg-white/90 backdrop-blur-lg rounded-3xl p-6 shadow-xl">
+
+          <div class="flex justify-center mb-4">
+            <img src="img/chefRossi.png" alt="Chef Rossi"
+              class="w-32 h-32 object-cover rounded-full ring-4 ring-white shadow-xl" />
+          </div>
 
           <h2 class="text-2xl font-semibold text-jungleRed mb-2">Any Allergies?</h2>
 
@@ -121,7 +130,6 @@
             class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 shadow active:scale-95">
             I do not have any allergies
           </button>
-
         </div>
       `;
 
@@ -129,20 +137,18 @@
         document.getElementById("audio-allergies").play().catch(() => {});
         setTimeout(() => {
           window.location.href = "hunt.html";
-        }, 900);
+        }, 800);
       });
     }
 
-    // Step controller
+    /* ---------- STEP CONTROL ---------- */
     function nextStep() {
       step++;
       if (step === 1) renderCuisineScreen();
       if (step === 2) renderAllergyScreen();
     }
 
-    // Start
     renderStartScreen();
   </script>
-
 </body>
 </html>
