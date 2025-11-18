@@ -4,38 +4,145 @@
   <meta charset="utf-8" />
   <title>Jungle Jim's International Foodie Adventure</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom colors -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            jungleGreen: '#1B8A5A',
+            jungleGold: '#F3C969',
+            jungleRed: '#E94F37',
+            jungleCream: '#FAF4E6',
+          }
+        }
+      }
+    }
+  </script>
+
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="page page-landing">
-  <main class="card">
-    <h1>Jungle Jim's International Foodie Adventure</h1>
-    <p class="subtitle">Explore the store. Discover new flavors. Build a full recipe one ingredient at a time.</p>
 
-    <section class="panel">
-      <h2>Choose Your Cuisine</h2>
-      <p>For this demo, select <strong>Italian</strong>.</p>
-      <div class="pill-row">
-        <button class="pill pill-selected">Italian</button>
-        <button class="pill pill-disabled">Mexican</button>
-        <button class="pill pill-disabled">Chinese</button>
-      </div>
-    </section>
+<body class="bg-jungleCream min-h-screen flex flex-col items-center justify-center p-4">
 
-    <section class="panel">
-      <h2>Allergies</h2>
-      <p>In the full version, shoppers select allergies. For this demo, tap:</p>
-      <button class="pill pill-selected">I do not have any allergies</button>
-    </section>
+  <!-- WRAPPER -->
+  <div id="screen-wrapper" class="w-full max-w-md mx-auto text-center"></div>
 
-    <button id="start-btn" class="primary-btn">Start My Adventure</button>
-  </main>
+  <!-- AUDIO ELEMENTS -->
+  <audio id="audio-welcome" src="audio/chef1_welcome.mp3"></audio>
+  <audio id="audio-cuisine" src="audio/chef2_cuisine.mp3"></audio>
+  <audio id="audio-allergies" src="audio/chef3_allergies.mp3"></audio>
 
   <script>
-    const audio = new Audio('audio/chef1_welcome.mp3');
-    document.getElementById('start-btn').addEventListener('click', () => {
-      audio.play().catch(() => {});
-      window.location.href = 'hunt.html';
-    });
+    const wrapper = document.getElementById("screen-wrapper");
+
+    // State
+    let step = 0;
+
+    // Screens
+    function renderStartScreen() {
+      wrapper.innerHTML = `
+        <div class="animate-fadeIn p-4">
+          <img src="img/chefRossi.png" alt="Chef Rossi"
+               class="w-48 h-auto mx-auto mb-4 drop-shadow-xl" />
+
+          <h1 class="text-3xl font-extrabold text-jungleRed mb-4 leading-tight">
+            Jungle Jim's<br>International<br>Foodie Adventure
+          </h1>
+
+          <p class="text-gray-700 mb-6 text-lg">
+            Explore the store, discover flavors, and collect ingredients for a real adventure meal.
+          </p>
+
+          <button id="startBtn"
+            class="bg-jungleGreen text-white text-lg font-bold rounded-xl px-6 py-3 shadow-lg active:scale-95 transition">
+            Tap to Begin
+          </button>
+        </div>
+      `;
+
+      document.getElementById("startBtn").addEventListener("click", () => {
+        document.getElementById("audio-welcome").play().catch(() => {});
+        nextStep();
+      });
+    }
+
+    function renderCuisineScreen() {
+      wrapper.innerHTML = `
+        <div class="animate-fadeIn p-4">
+          <img src="img/chefRossi.png" alt="Chef Rossi"
+               class="w-40 h-auto mx-auto mb-4 drop-shadow-md" />
+
+          <h2 class="text-2xl font-semibold text-jungleRed mb-2">Choose Your Cuisine</h2>
+
+          <p class="text-gray-700 mb-4">For this demo, select <strong>Italian</strong>.</p>
+
+          <button id="chooseItalian"
+            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-2 shadow active:scale-95">
+            Italian
+          </button>
+
+          <button disabled
+            class="w-full bg-gray-300 text-gray-500 font-semibold rounded-lg py-3 mt-2 opacity-50">
+            Mexican
+          </button>
+
+          <button disabled
+            class="w-full bg-gray-300 text-gray-500 font-semibold rounded-lg py-3 mt-2 opacity-50">
+            Chinese
+          </button>
+
+        </div>
+      `;
+
+      document.getElementById("chooseItalian").addEventListener("click", () => {
+        document.getElementById("audio-cuisine").play().catch(() => {});
+        nextStep();
+      });
+    }
+
+    function renderAllergyScreen() {
+      wrapper.innerHTML = `
+        <div class="animate-fadeIn p-4">
+          <img src="img/chefRossi.png" alt="Chef Rossi"
+               class="w-40 h-auto mx-auto mb-4 drop-shadow-md" />
+
+          <h2 class="text-2xl font-semibold text-jungleRed mb-2">Any Allergies?</h2>
+
+          <p class="text-gray-700 mb-4">
+            In the full version, shoppers will select allergens. For this demo, tap:
+          </p>
+
+          <button id="noAllergiesBtn"
+            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 shadow active:scale-95">
+            I do not have any allergies
+          </button>
+
+        </div>
+      `;
+
+      document.getElementById("noAllergiesBtn").addEventListener("click", () => {
+        document.getElementById("audio-allergies").play().catch(() => {});
+        setTimeout(() => {
+          window.location.href = "hunt.html";
+        }, 900);
+      });
+    }
+
+    // Step controller
+    function nextStep() {
+      step++;
+      if (step === 1) renderCuisineScreen();
+      if (step === 2) renderAllergyScreen();
+    }
+
+    // Start
+    renderStartScreen();
   </script>
+
 </body>
 </html>
