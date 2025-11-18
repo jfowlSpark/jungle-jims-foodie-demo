@@ -43,7 +43,8 @@
   </style>
 </head>
 
-<body class="min-h-screen relative bg-gradient-to-br from-jungleGreen via-jungleCream to-jungleGold overflow-hidden">
+<!-- allow scrolling -->
+<body class="min-h-screen relative bg-gradient-to-br from-jungleGreen via-jungleCream to-jungleGold">
 
   <!-- Vines -->
   <img src="img/vines_top_left.png" class="absolute top-0 left-0 w-32 opacity-60 pointer-events-none">
@@ -56,44 +57,62 @@
     🔊
   </button>
 
-  <!-- Ingredient Progress Display -->
+  <!-- Step indicator (8 clues total here) -->
   <div id="stepIndicator" class="fixed top-4 left-1/2 -translate-x-1/2 text-white font-bold text-lg drop-shadow z-10">
-    Ingredient <span id="stepNum">1</span> of 4
+    Clue <span id="stepNum">1</span> of 8
   </div>
 
   <!-- MAIN CONTENT WRAPPER -->
-  <div id="huntWrapper" class="w-full max-w-md mx-auto text-center mt-16 p-4"></div>
+  <div id="huntWrapper" class="w-full max-w-md mx-auto text-center pt-16 pb-10 px-4"></div>
 
-  <!-- AUDIO (you provide these files) -->
+  <!-- AUDIO (steps 5–12 in your master list) -->
   <audio id="audio1" src="audio/chef4_pasta.mp3"></audio>
-  <audio id="audio2" src="audio/chef5_sauce.mp3"></audio>
-  <audio id="audio3" src="audio/chef6_cheese.mp3"></audio>
-  <audio id="audio4" src="audio/chef7_spinach.mp3"></audio>
-  <audio id="bing" src="audio/bing.mp3"></audio>
+  <audio id="audio2" src="audio/chef5_fresh_spinach.mp3"></audio>
+  <audio id="audio3" src="audio/chef6_frozen_spinach.mp3"></audio>
+  <audio id="audio4" src="audio/chef7_mozzarella.mp3"></audio>
+  <audio id="audio5" src="audio/chef8_sauce.mp3"></audio>
+  <audio id="audio6" src="audio/chef9_sour_cream.mp3"></audio>
+  <audio id="audio7" src="audio/chef10_garlic_salt.mp3"></audio>
+  <audio id="audio8" src="audio/chef11_eggs.mp3"></audio>
+  <audio id="bing"   src="audio/bing.mp3"></audio>
 
   <script>
     let step = 1;
     let currentAudio = null;
 
-    const wrapper = document.getElementById("huntWrapper");
+    const wrapper   = document.getElementById("huntWrapper");
     const replayBtn = document.getElementById("replayBtn");
-    const stepNum = document.getElementById("stepNum");
+    const stepNum   = document.getElementById("stepNum");
 
     /* ---------------------
-       UTIL: PLAY AUDIO
+       PLAY AUDIO
     --------------------- */
     function playAudio(id) {
-      currentAudio = document.getElementById(id);
+      const nextAudio = document.getElementById(id);
+      if (!nextAudio) return;
+
+      // stop any previous clip
+      if (currentAudio && !currentAudio.paused) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+
+      currentAudio = nextAudio;
       replayBtn.classList.remove("hidden");
-      currentAudio.play().catch(()=>{});
+
+      currentAudio.currentTime = 0;
+      currentAudio.play().catch(() => {});
     }
 
     replayBtn.addEventListener("click", () => {
-      if (currentAudio) currentAudio.play().catch(()=>{});
+      if (currentAudio) {
+        currentAudio.currentTime = 0;
+        currentAudio.play().catch(() => {});
+      }
     });
 
     /* ---------------------
-       UTIL: NARRATION BOX
+       NARRATION BOX
     --------------------- */
     function narrationBox(text) {
       return `
@@ -107,7 +126,7 @@
     }
 
     /* ---------------------
-       UTIL: CAMERA FRAME
+       CAMERA FRAME
     --------------------- */
     function cameraFrame(imgSrc, altText) {
       return `
@@ -129,9 +148,10 @@
     }
 
     /* ---------------------
-       INGREDIENT SCREENS
+       CLUE SCREENS (1–8)
     --------------------- */
 
+    // 1) Pasta
     function renderStep1() {
       stepNum.textContent = "1";
       wrapper.innerHTML = `
@@ -139,19 +159,19 @@
           <img src="img/chefRossi.png"
             class="w-28 h-28 mx-auto rounded-full shadow-xl ring-4 ring-white mb-4 animate-popIn">
 
-          <h2 class="text-2xl font-bold text-jungleRed mb-2">Ingredient #1</h2>
+          <h2 class="text-2xl font-bold text-jungleRed mb-2">Clue #1 – Pasta</h2>
 
           ${narrationBox(`
             “Your journey begins in the **International Pasta Aisle**!  
-            Seek out a bag of **Garofalo Pasta** — dark packaging with elegant lettering.  
-            Line it up in your camera window, then tap Scan.”
+            Hunt for a bag of **Garofalo pasta** — golden penne in a clear bag  
+            with elegant black script. Line it up in your camera view, then tap **Scan**.”
           `)}
 
           ${cameraFrame("img/pasta.png", "Garofalo pasta")}
 
           <button id="scanBtn"
             class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-6 shadow active:scale-95">
-            Scan Ingredient
+            Scan Pasta
           </button>
         </div>
       `;
@@ -160,6 +180,7 @@
       playAudio("audio1");
     }
 
+    // 2) Fresh Spinach (produce)
     function renderStep2() {
       stepNum.textContent = "2";
       wrapper.innerHTML = `
@@ -167,19 +188,19 @@
           <img src="img/chefRossi.png"
             class="w-28 h-28 mx-auto rounded-full shadow-xl ring-4 ring-white mb-4 animate-popIn">
 
-          <h2 class="text-2xl font-bold text-jungleRed mb-2">Ingredient #2</h2>
+          <h2 class="text-2xl font-bold text-jungleRed mb-2">Clue #2 – Fresh Spinach</h2>
 
           ${narrationBox(`
-            “Bellissimo! Now head to the **pasta sauce aisle**.  
-            You’re looking for a rich **tomato & basil pasta sauce** —  
-            deep red color, classic Italian label. Frame it in your camera view, then tap Scan.”
+            “Molto bene! Now wander to the **produce department**.  
+            Look for a bright green bundle of **fresh spinach** — crisp leaves, rubber-banded together.  
+            Imagine lining it up in your camera window, then tap **Scan**.”
           `)}
 
-          ${cameraFrame("img/pasta_sauce.png", "Tomato basil pasta sauce")}
+          ${cameraFrame("img/fresh_spinach.png", "Fresh spinach")}
 
           <button id="scanBtn"
             class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-6 shadow active:scale-95">
-            Scan Ingredient
+            Scan Fresh Spinach
           </button>
         </div>
       `;
@@ -188,6 +209,7 @@
       playAudio("audio2");
     }
 
+    // 3) Frozen Spinach
     function renderStep3() {
       stepNum.textContent = "3";
       wrapper.innerHTML = `
@@ -195,27 +217,19 @@
           <img src="img/chefRossi.png"
             class="w-28 h-28 mx-auto rounded-full shadow-xl ring-4 ring-white mb-4 animate-popIn">
 
-          <h2 class="text-2xl font-bold text-jungleRed mb-2">Ingredient #3</h2>
+          <h2 class="text-2xl font-bold text-jungleRed mb-2">Clue #3 – Frozen Spinach</h2>
 
           ${narrationBox(`
-            “Fantastico! Now travel to the **dairy aisle** and **seasonings section**.  
-            You’ll need **mozzarella**, **parmesan**, **garlic salt**, plus **eggs** and **sour cream**  
-            for extra richness. Imagine scanning each one in your camera window, then tap Scan when you’re ready.”
+            “Fantastico! From fresh to frozen — glide to the **frozen vegetable aisle**.  
+            Search for a bag of **frozen spinach** to keep your bake hearty and convenient.  
+            Picture it in your camera frame, then tap **Scan**.”
           `)}
 
-          ${cameraFrame("img/mozzarella.png", "Cheese and seasonings")}
-
-          <div class="flex flex-wrap justify-center gap-3 mt-4 text-xs text-gray-600">
-            <span>🧀 Mozzarella</span>
-            <span>🧀 Parmesan</span>
-            <span>🧂 Garlic Salt</span>
-            <span>🥚 Eggs</span>
-            <span>🥣 Sour Cream</span>
-          </div>
+          ${cameraFrame("img/frozen_spinach.png", "Frozen spinach")}
 
           <button id="scanBtn"
             class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-6 shadow active:scale-95">
-            Scan Ingredient Group
+            Scan Frozen Spinach
           </button>
         </div>
       `;
@@ -224,6 +238,7 @@
       playAudio("audio3");
     }
 
+    // 4) Mozzarella
     function renderStep4() {
       stepNum.textContent = "4";
       wrapper.innerHTML = `
@@ -231,25 +246,142 @@
           <img src="img/chefRossi.png"
             class="w-28 h-28 mx-auto rounded-full shadow-xl ring-4 ring-white mb-4 animate-popIn">
 
-          <h2 class="text-2xl font-bold text-jungleRed mb-2">Final Ingredient</h2>
+          <h2 class="text-2xl font-bold text-jungleRed mb-2">Clue #4 – Mozzarella</h2>
 
           ${narrationBox(`
-            “For your final stop, glide into the **produce department**.  
-            Search for a fresh bundle of **bright green spinach**.  
-            Picture it in your camera frame, then tap Scan to finish the adventure!”
+            “Next stop: the **dairy aisle**.  
+            You’re hunting for a bag of shredded **mozzarella cheese** —  
+            perfect for a melty, bubbly top. Line that bag up in your camera window, then tap **Scan**.”
           `)}
 
-          ${cameraFrame("img/fresh_spinach.png", "Fresh spinach")}
+          ${cameraFrame("img/mozzarella.png", "Mozzarella cheese")}
 
           <button id="scanBtn"
             class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-6 shadow active:scale-95">
-            Scan Final Ingredient
+            Scan Mozzarella
+          </button>
+        </div>
+      `;
+
+      document.getElementById("scanBtn").onclick = () => handleScan(5);
+      playAudio("audio4");
+    }
+
+    // 5) Pasta Sauce
+    function renderStep5() {
+      stepNum.textContent = "5";
+      wrapper.innerHTML = `
+        <div class="animate-shimmer bg-white/90 rounded-3xl p-6 shadow-xl">
+          <img src="img/chefRossi.png"
+            class="w-28 h-28 mx-auto rounded-full shadow-xl ring-4 ring-white mb-4 animate-popIn">
+
+          <h2 class="text-2xl font-bold text-jungleRed mb-2">Clue #5 – Pasta Sauce</h2>
+
+          ${narrationBox(`
+            “Bellissimo! Now head to the **pasta sauce aisle**.  
+            Look for a jar or two-pack of **tomato & basil pasta sauce** — deep red, classic Italian label.  
+            Imagine your camera locking onto that rich red color, then tap **Scan**.”
+          `)}
+
+          ${cameraFrame("img/pasta_sauce.png", "Tomato & basil pasta sauce")}
+
+          <button id="scanBtn"
+            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-6 shadow active:scale-95">
+            Scan Pasta Sauce
+          </button>
+        </div>
+      `;
+
+      document.getElementById("scanBtn").onclick = () => handleScan(6);
+      playAudio("audio5");
+    }
+
+    // 6) Sour Cream
+    function renderStep6() {
+      stepNum.textContent = "6";
+      wrapper.innerHTML = `
+        <div class="animate-shimmer bg-white/90 rounded-3xl p-6 shadow-xl">
+          <img src="img/chefRossi.png"
+            class="w-28 h-28 mx-auto rounded-full shadow-xl ring-4 ring-white mb-4 animate-popIn">
+
+          <h2 class="text-2xl font-bold text-jungleRed mb-2">Clue #6 – Sour Cream</h2>
+
+          ${narrationBox(`
+            “To make your bake extra creamy, stay in the **dairy section**  
+            and find a tub of **sour cream** — bright white container, bold lettering.  
+            Line it up in your camera view, then tap **Scan**.”
+          `)}
+
+          ${cameraFrame("img/sour_cream.png", "Sour cream")}
+
+          <button id="scanBtn"
+            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-6 shadow active:scale-95">
+            Scan Sour Cream
+          </button>
+        </div>
+      `;
+
+      document.getElementById("scanBtn").onclick = () => handleScan(7);
+      playAudio("audio6");
+    }
+
+    // 7) Garlic Salt
+    function renderStep7() {
+      stepNum.textContent = "7";
+      wrapper.innerHTML = `
+        <div class="animate-shimmer bg-white/90 rounded-3xl p-6 shadow-xl">
+          <img src="img/chefRossi.png"
+            class="w-28 h-28 mx-auto rounded-full shadow-xl ring-4 ring-white mb-4 animate-popIn">
+
+          <h2 class="text-2xl font-bold text-jungleRed mb-2">Clue #7 – Garlic Salt</h2>
+
+          ${narrationBox(`
+            “Now spice things up! Stroll to the **seasonings aisle**  
+            and search for a shaker of **garlic salt** —  
+            white label with golden garlic bulbs. When you spy it, imagine your scanner beeping,  
+            then tap **Scan**.”
+          `)}
+
+          ${cameraFrame("img/garlic_salt.png", "Garlic salt")}
+
+          <button id="scanBtn"
+            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-6 shadow active:scale-95">
+            Scan Garlic Salt
+          </button>
+        </div>
+      `;
+
+      document.getElementById("scanBtn").onclick = () => handleScan(8);
+      playAudio("audio7");
+    }
+
+    // 8) Eggs
+    function renderStep8() {
+      stepNum.textContent = "8";
+      wrapper.innerHTML = `
+        <div class="animate-shimmer bg-white/90 rounded-3xl p-6 shadow-xl">
+          <img src="img/chefRossi.png"
+            class="w-28 h-28 mx-auto rounded-full shadow-xl ring-4 ring-white mb-4 animate-popIn">
+
+          <h2 class="text-2xl font-bold text-jungleRed mb-2">Clue #8 – Eggs</h2>
+
+          ${narrationBox(`
+            “For the final touch, return to the **egg case**.  
+            Find a carton of **large eggs** to bind all these delicious ingredients together.  
+            Picture the carton in your camera frame… then tap **Scan** to finish your hunt!”
+          `)}
+
+          ${cameraFrame("img/eggs.png", "Eggs")}
+
+          <button id="scanBtn"
+            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-6 shadow active:scale-95">
+            Scan Eggs & Finish
           </button>
         </div>
       `;
 
       document.getElementById("scanBtn").onclick = () => handleScan("done");
-      playAudio("audio4");
+      playAudio("audio8");
     }
 
     /* ---------------------
@@ -257,10 +389,13 @@
     --------------------- */
     function handleScan(nextStep) {
       const bing = document.getElementById("bing");
-      bing.play().catch(()=>{});
+      if (bing) {
+        bing.currentTime = 0;
+        bing.play().catch(() => {});
+      }
 
       const card = wrapper.querySelector("div");
-      card.classList.add("animate-successPop");
+      if (card) card.classList.add("animate-successPop");
 
       setTimeout(() => {
         if (nextStep === "done") {
@@ -276,10 +411,16 @@
        STEP LOADER
     --------------------- */
     function loadStep() {
-      if (step === 1) renderStep1();
-      if (step === 2) renderStep2();
-      if (step === 3) renderStep3();
-      if (step === 4) renderStep4();
+      switch (step) {
+        case 1: renderStep1(); break;
+        case 2: renderStep2(); break;
+        case 3: renderStep3(); break;
+        case 4: renderStep4(); break;
+        case 5: renderStep5(); break;
+        case 6: renderStep6(); break;
+        case 7: renderStep7(); break;
+        case 8: renderStep8(); break;
+      }
     }
 
     // Start hunt
