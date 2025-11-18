@@ -39,7 +39,6 @@
   <style>
     body { font-family: 'Quicksand', sans-serif; }
 
-    /* Confetti Animation */
     .confetti {
       position: fixed;
       width: 10px;
@@ -49,7 +48,7 @@
       opacity: 0.9;
     }
     @keyframes fall {
-      0% { transform: translateY(-20px) rotate(0deg); }
+      0%   { transform: translateY(-20px) rotate(0deg); }
       100% { transform: translateY(110vh) rotate(720deg); }
     }
   </style>
@@ -82,15 +81,18 @@
 
     <!-- Summary Card -->
     <div class="bg-white/90 rounded-3xl p-6 shadow-xl text-left animate-shimmer">
-      <h3 class="text-xl font-semibold text-jungleRed mb-3">Ingredients Found:</h3>
+      <h3 class="text-xl font-semibold text-jungleRed mb-3">Ingredients You Collected:</h3>
 
-      <ul class="space-y-3 text-gray-700">
+      <ul class="space-y-2 text-gray-700">
         <li>🍝 Garofalo Pasta</li>
-        <li>🍅 Italian Pasta Sauce</li>
-        <li>🧀 Mozzarella Cheese</li>
-        <li>🧀 Parmesan Cheese</li>
-        <li>🧂 Garlic Salt</li>
+        <li>🍅 Tomato & Basil Pasta Sauce</li>
         <li>🥬 Fresh Spinach</li>
+        <li>🧊 Frozen Spinach</li>
+        <li>🧀 Mozzarella Cheese</li>
+        <li>🥣 Sour Cream</li>
+        <li>🧂 Garlic Salt</li>
+        <li>🥚 Eggs</li>
+        <li>🧀 Parmesan (included in the recipe)</li>
       </ul>
 
       <img src="img/final_dish.jpg"
@@ -115,26 +117,36 @@
 
   </div>
 
-  <!-- Confetti Script -->
+  <!-- Final Audio -->
+  <audio id="audioFinal" src="audio/chef12_final.mp3"></audio>
+
+  <!-- Confetti + audio trigger -->
   <script>
     function launchConfetti() {
       for (let i = 0; i < 80; i++) {
         let c = document.createElement("div");
         c.classList.add("confetti");
-
         c.style.left = Math.random() * 100 + "vw";
         c.style.backgroundColor = ["#F3C969", "#E94F37", "#1B8A5A", "#ffffff"][Math.floor(Math.random()*4)];
         c.style.animationDelay = Math.random() * 0.5 + "s";
         c.style.transform = "rotate(" + (Math.random()*360) + "deg)";
-
         document.body.appendChild(c);
-
         setTimeout(() => c.remove(), 3200);
       }
     }
 
-    // Launch confetti on page load
-    setTimeout(launchConfetti, 300);
+    function playFinalAudio() {
+      const audio = document.getElementById("audioFinal");
+      if (!audio) return;
+      audio.currentTime = 0;
+      audio.play().catch(()=>{});
+    }
+
+    // Fire confetti and play final VO shortly after load
+    setTimeout(() => {
+      launchConfetti();
+      playFinalAudio();
+    }, 300);
   </script>
 
 </body>
