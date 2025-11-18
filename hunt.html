@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Ingredient Hunt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="page page-hunt">
+  <main class="card">
+    <header class="hunt-header">
+      <h1>Ingredient Hunt</h1>
+      <p id="step-counter">Loading...</p>
+    </header>
+
+    <section id="clue-section">
+      <h2>Chef Giovanni’s Clue</h2>
+      <p id="clue-text">Loading clue...</p>
+      <button id="play-clue" class="secondary-btn">🔊 Play Clue Again</button>
+    </section>
+
+    <section id="scan-section">
+      <h2>Tap an Item to “Scan” It</h2>
+      <div id="item-grid" class="item-grid"></div>
+    </section>
+
+    <section id="feedback" aria-live="polite"></section>
+
+    <button id="next-btn" class="primary-btn" style="display:none;">Next Ingredient</button>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+{
+  "title": "Jungle Jim's International Foodie Adventure",
+  "chefName": "Chef Giovanni \"The Globe-Trotting Gourmet\" Rossi",
+  "audio": {
+    "welcome": "audio/chef1_welcome.mp3",
+    "cuisine": "audio/chef2_cuisine.mp3",
+    "allergies": "audio/chef3_allergies.mp3",
+    "correct": "audio/chef_correct.mp3",
+    "tryAgain": "audio/chef_try_again.mp3",
+    "final": "audio/chef12_final.mp3"
+  },
+  "steps": [
+    {
+      "id": "pasta",
+      "order": 1,
+      "name": "Garofalo Penne Pasta",
+      "image": "img/pasta.png",
+      "clueAudio": "audio/chef4_pasta.mp3",
+      "clueText": "Our first stop is the heart of Italy! Make your way to the Italy aisle... [short version of chef line]",
+      "location": "Italy aisle",
+      "correctOptionId": "pasta"
+    },
+    {
+      "id": "fresh_spinach",
+      "order": 2,
+      "name": "Fresh Spinach",
+      "image": "img/fresh_spinach.png",
+      "clueAudio": "audio/chef5_fresh_spinach.mp3",
+      "clueText": "Head into Jungle Jim’s famous Produce Kingdom and look for fresh spinach leaves...",
+      "location": "Produce",
+      "correctOptionId": "fresh_spinach"
+    },
+    {
+      "id": "frozen_spinach",
+      "order": 3,
+      "name": "Frozen Chopped Spinach",
+      "image": "img/frozen_spinach.png",
+      "clueAudio": "audio/chef6_frozen_spinach.mp3",
+      "clueText": "From Produce, step into the Frozen Foods caverns and find frozen chopped spinach...",
+      "location": "Frozen Foods",
+      "correctOptionId": "frozen_spinach"
+    },
+    {
+      "id": "mozzarella",
+      "order": 4,
+      "name": "Shredded Mozzarella",
+      "image": "img/mozzarella.png",
+      "clueAudio": "audio/chef7_mozzarella.mp3",
+      "clueText": "Journey to the Dairy Expanse and find Sargento shredded mozzarella in the red bag...",
+      "location": "Dairy",
+      "correctOptionId": "mozzarella"
+    },
+    {
+      "id": "sauce",
+      "order": 5,
+      "name": "Tomato & Basil Pasta Sauce",
+      "image": "img/pasta_sauce.png",
+      "clueAudio": "audio/chef8_sauce.mp3",
+      "clueText": "Back to the sauce aisle to find Classico Tomato & Basil in its rustic label...",
+      "location": "Pasta Sauce aisle",
+      "correctOptionId": "sauce"
+    },
+    {
+      "id": "sour_cream",
+      "order": 6,
+      "name": "Sour Cream",
+      "image": "img/sour_cream.png",
+      "clueAudio": "audio/chef9_sour_cream.mp3",
+      "clueText": "Stay in Dairy and find the white tub of Daisy Sour Cream with blue and red stripes...",
+      "location": "Dairy",
+      "correctOptionId": "sour_cream"
+    },
+    {
+      "id": "garlic_salt",
+      "order": 7,
+      "name": "Garlic Salt",
+      "image": "img/garlic_salt.png",
+      "clueAudio": "audio/chef10_garlic_salt.mp3",
+      "clueText": "Walk into the Spice Aisle and look for Badia Garlic Salt with a garlic picture on the label...",
+      "location": "Spice aisle",
+      "correctOptionId": "garlic_salt"
+    },
+    {
+      "id": "eggs",
+      "order": 8,
+      "name": "Eggs",
+      "image": "img/eggs.png",
+      "clueAudio": "audio/chef11_eggs.mp3",
+      "clueText": "Head to the egg section and find the Eggland’s Best white carton with red and blue text...",
+      "location": "Eggs",
+      "correctOptionId": "eggs"
+    }
+  ]
+}

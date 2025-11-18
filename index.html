@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Jungle Jim's International Foodie Adventure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="page page-landing">
+  <main class="card">
+    <h1>Jungle Jim's International Foodie Adventure</h1>
+    <p class="subtitle">Explore the store. Discover new flavors. Build a full recipe one ingredient at a time.</p>
+
+    <section class="panel">
+      <h2>Choose Your Cuisine</h2>
+      <p>For this demo, select <strong>Italian</strong>.</p>
+      <div class="pill-row">
+        <button class="pill pill-selected">Italian</button>
+        <button class="pill pill-disabled">Mexican</button>
+        <button class="pill pill-disabled">Chinese</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Allergies</h2>
+      <p>In the full version, shoppers select allergies. For this demo, tap:</p>
+      <button class="pill pill-selected">I do not have any allergies</button>
+    </section>
+
+    <button id="start-btn" class="primary-btn">Start My Adventure</button>
+  </main>
+
+  <script>
+    const audio = new Audio('audio/chef1_welcome.mp3');
+    document.getElementById('start-btn').addEventListener('click', () => {
+      audio.play().catch(() => {});
+      window.location.href = 'hunt.html';
+    });
+  </script>
+</body>
+</html>

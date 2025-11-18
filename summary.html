@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Adventure Complete</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="page page-summary">
+  <main class="card">
+    <h1>Adventure Complete!</h1>
+    <p class="subtitle">You gathered all the ingredients for Italian Pasta & Spinach Bake.</p>
+
+    <section class="panel">
+      <h2>Your Ingredients</h2>
+      <ul id="ingredient-list"></ul>
+    </section>
+
+    <section class="panel">
+      <h2>Take the Recipe Home</h2>
+      <a class="primary-btn" href="pdf/italian_pasta_spinach_bake.pdf" target="_blank">View Recipe Card</a>
+    </section>
+
+    <a href="index.html" class="link-back">Start Over</a>
+  </main>
+
+  <script>
+    const list = document.getElementById('ingredient-list');
+    const saved = JSON.parse(localStorage.getItem('jj_foundIngredients') || '[]');
+    saved.forEach(name => {
+      const li = document.createElement('li');
+      li.textContent = name;
+      list.appendChild(li);
+    });
+
+    const finalAudio = new Audio('audio/chef12_final.mp3');
+    document.addEventListener('click', () => finalAudio.play().catch(()=>{}), { once: true });
+  </script>
+</body>
+</html>
