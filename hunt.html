@@ -2,33 +2,275 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Ingredient Hunt</title>
+  <title>Your Ingredient Hunt</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            fancy: ['Quicksand', 'sans-serif']
+          },
+          colors: {
+            jungleGreen: '#1B8A5A',
+            jungleGold: '#F3C969',
+            jungleRed: '#E94F37',
+            jungleCream: '#FAF4E6',
+          },
+          animation: {
+            fadeIn: "fadeIn 0.45s ease-out",
+            slideIn: "slideIn 0.4s ease-out",
+            popIn: "popIn 0.45s ease-out",
+            shimmer: "shimmer 1s ease-in-out forwards",
+            successPop: "successPop 0.5s ease-out"
+          }
+        }
+      }
+    }
+  </script>
+
   <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    body { font-family: 'Quicksand', sans-serif; }
+  </style>
 </head>
-<body class="page page-hunt">
-  <main class="card">
-    <header class="hunt-header">
-      <h1>Ingredient Hunt</h1>
-      <p id="step-counter">Loading...</p>
-    </header>
 
-    <section id="clue-section">
-      <h2>Chef Giovanni’s Clue</h2>
-      <p id="clue-text">Loading clue...</p>
-      <button id="play-clue" class="secondary-btn">🔊 Play Clue Again</button>
-    </section>
+<body class="min-h-screen relative bg-gradient-to-br from-jungleGreen via-jungleCream to-jungleGold overflow-hidden">
 
-    <section id="scan-section">
-      <h2>Tap an Item to “Scan” It</h2>
-      <div id="item-grid" class="item-grid"></div>
-    </section>
+  <!-- Vines -->
+  <img src="img/vines_top_left.png" class="absolute top-0 left-0 w-32 opacity-60 pointer-events-none">
+  <img src="img/vines_top_right.png" class="absolute top-0 right-0 w-32 opacity-60 pointer-events-none">
 
-    <section id="feedback" aria-live="polite"></section>
+  <!-- Replay Audio -->
+  <button id="replayBtn"
+    class="hidden fixed bottom-6 right-6 w-14 h-14 bg-white/90 border-2 border-jungleGreen rounded-full shadow-xl 
+           flex items-center justify-center text-jungleGreen text-2xl active:scale-90 transition z-50">
+    🔊
+  </button>
 
-    <button id="next-btn" class="primary-btn" style="display:none;">Next Ingredient</button>
-  </main>
+  <!-- Ingredient Progress Display -->
+  <div id="stepIndicator" class="fixed top-4 left-1/2 -translate-x-1/2 text-white font-bold text-lg drop-shadow z-10">
+    Ingredient <span id="stepNum">1</span> of 4
+  </div>
 
-  <script src="app.js"></script>
+  <!-- MAIN CONTENT WRAPPER -->
+  <div id="huntWrapper" class="w-full max-w-md mx-auto text-center mt-16 p-4"></div>
+
+  <!-- AUDIO -->
+  <audio id="audio1" src="audio/chef4_pasta.mp3"></audio>
+  <audio id="audio2" src="audio/chef5_sauce.mp3"></audio>
+  <audio id="audio3" src="audio/chef6_cheese.mp3"></audio>
+  <audio id="audio4" src="audio/chef7_spinach.mp3"></audio>
+  <audio id="bing" src="audio/bing.mp3"></audio>
+
+  <script>
+    let step = 1;
+    let currentAudio = null;
+
+    const wrapper = document.getElementById("huntWrapper");
+    const replayBtn = document.getElementById("replayBtn");
+    const stepNum = document.getElementById("stepNum");
+
+    /* ---------------------
+       UTIL: PLAY AUDIO
+    --------------------- */
+    function playAudio(id) {
+      currentAudio = document.getElementById(id);
+      replayBtn.classList.remove("hidden");
+      currentAudio.play().catch(()=>{});
+    }
+
+    replayBtn.addEventListener("click", () => {
+      if (currentAudio) currentAudio.play().catch(()=>{});
+    });
+
+    /* ---------------------
+       UTIL: NARRATION BOX
+    --------------------- */
+    function narrationBox(text) {
+      return `
+        <div class="relative bg-white/80 rounded-xl p-4 mt-4 shadow-md text-left animate-slideIn">
+          <div class="absolute -top-3 left-6 w-0 h-0 
+                      border-l-8 border-r-8 border-b-8 border-transparent 
+                      border-b-white/80"></div>
+
+          <p class="text-gray-700 text-lg leading-relaxed">${text}</p>
+        </div>
+      `;
+    }
+
+    /* ---------------------
+       INGREDIENT SCREENS
+    --------------------- */
+
+    function renderStep1() {
+      stepNum.textContent = "1";
+      wrapper.innerHTML = `
+        <div class="animate-shimmer bg-white/90 rounded-3xl p-6 shadow-xl">
+          <img src="img/chefRossi.png"
+            class="w-28 h-28 mx-auto rounded-full shadow-xl ring-4 ring-white mb-4 animate-popIn">
+
+          <h2 class="text-2xl font-bold text-jungleRed mb-2">Ingredient #1</h2>
+
+          ${narrationBox(`
+            “Your journey begins in the **International Pasta Aisle**!  
+            Seek out a bag of **Garofalo Pasta** — look for the dark packaging  
+            with elegant lettering. It’s often near the artisan imports section!”
+          `)}
+
+          <img src="img/pasta.jpg" class="w-40 mx-auto mt-4 rounded shadow">
+
+          <button id="scanBtn"
+            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-6 shadow active:scale-95">
+            Scan Ingredient
+          </button>
+        </div>
+      `;
+
+      document.getElementById("scanBtn").onclick = () => handleScan(2);
+      playAudio("audio1");
+    }
+
+
+    function renderStep2() {
+      stepNum.textContent = "2";
+      wrapper.innerHTML = `
+        <div class="animate-shimmer bg-white/90 rounded-3xl p-6 shadow-xl">
+
+          <img src="img/chefRossi.png"
+            class="w-28 h-28 mx-auto rounded-full shadow-xl ring-4 ring-white mb-4 animate-popIn">
+
+          <h2 class="text-2xl font-bold text-jungleRed mb-2">Ingredient #2</h2>
+
+          ${narrationBox(`
+            “Bellissimo! Now journey to the **sauce aisle**.  
+            You’re searching for a **rich tomato pasta sauce** —  
+            look for a jar with a deep red color and bold Italian branding!”
+          `)}
+
+          <img src="img/pastaSauce.png" class="w-36 mx-auto mt-4 rounded shadow">
+
+          <button id="scanBtn"
+            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-6 shadow active:scale-95">
+            Scan Ingredient
+          </button>
+        </div>
+      `;
+
+      document.getElementById("scanBtn").onclick = () => handleScan(3);
+      playAudio("audio2");
+    }
+
+
+    function renderStep3() {
+      stepNum.textContent = "3";
+      wrapper.innerHTML = `
+        <div class="animate-shimmer bg-white/90 rounded-3xl p-6 shadow-xl">
+
+          <img src="img/chefRossi.png"
+            class="w-28 h-28 mx-auto rounded-full shadow-xl ring-4 ring-white mb-4 animate-popIn">
+
+          <h2 class="text-2xl font-bold text-jungleRed mb-2">Ingredient #3</h2>
+
+          ${narrationBox(`
+            “Fantastico! Now head toward the **dairy aisle** and then  
+            the **seasonings section**.  
+            You will need:  
+            • Mozzarella  
+            • Parmesan  
+            • Garlic Salt  
+            Collect your cheesy treasures!”
+          `)}
+
+          <div class="flex justify-center gap-4 mt-4">
+            <img src="img/mozzarella.png" class="w-20 rounded shadow">
+            <img src="img/parmesanCheese.png" class="w-20 rounded shadow">
+            <img src="img/GarlicSalt.jpg" class="w-20 rounded shadow">
+          </div>
+
+          <button id="scanBtn"
+            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-6 shadow active:scale-95">
+            Scan Ingredient Group
+          </button>
+        </div>
+      `;
+
+      document.getElementById("scanBtn").onclick = () => handleScan(4);
+      playAudio("audio3");
+    }
+
+
+    function renderStep4() {
+      stepNum.textContent = "4";
+      wrapper.innerHTML = `
+        <div class="animate-shimmer bg-white/90 rounded-3xl p-6 shadow-xl">
+
+          <img src="img/chefRossi.png"
+            class="w-28 h-28 mx-auto rounded-full shadow-xl ring-4 ring-white mb-4 animate-popIn">
+
+          <h2 class="text-2xl font-bold text-jungleRed mb-2">Final Ingredient</h2>
+
+          ${narrationBox(`
+            “For your last ingredient, journey to the **produce department**!  
+            Seek out a fresh bundle of **spinach** — crisp, leafy, vibrant green!  
+            With this final ingredient, your Italian Pasta & Spinach Bake is complete!”
+          `)}
+
+          <img src="img/spinach.jpg" class="w-40 mx-auto mt-4 rounded shadow">
+
+          <button id="scanBtn"
+            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-6 shadow active:scale-95">
+            Scan Final Ingredient
+          </button>
+        </div>
+      `;
+
+      document.getElementById("scanBtn").onclick = () => handleScan("done");
+      playAudio("audio4");
+    }
+
+
+    /* ---------------------
+       SCAN HANDLER
+    --------------------- */
+    function handleScan(nextStep) {
+      const bing = document.getElementById("bing");
+      bing.play().catch(()=>{});
+
+      const card = wrapper.querySelector("div");
+      card.classList.add("animate-successPop");
+
+      setTimeout(() => {
+        if (nextStep === "done") {
+          window.location.href = "summary.html";
+        } else {
+          step = nextStep;
+          loadStep();
+        }
+      }, 700);
+    }
+
+    /* ---------------------
+       STEP LOADER
+    --------------------- */
+    function loadStep() {
+      if (step === 1) renderStep1();
+      if (step === 2) renderStep2();
+      if (step === 3) renderStep3();
+      if (step === 4) renderStep4();
+    }
+
+    // Start hunt
+    loadStep();
+  </script>
+
 </body>
 </html>
