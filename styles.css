@@ -1,13 +1,22 @@
-/* Smooth fade-in animation */
+/* Fade In */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 .animate-fadeIn {
   animation: fadeIn 0.45s ease-out;
 }
 
-/* Pop-in effect for Chef avatar */
+/* Slide In */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-slideIn {
+  animation: slideIn 0.4s ease-out;
+}
+
+/* Pop In */
 @keyframes popIn {
   0% { transform: scale(0.7); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
@@ -16,7 +25,17 @@
   animation: popIn 0.45s ease-out;
 }
 
-/* Improve tap targets on mobile */
+/* Shimmer effect between screen changes */
+@keyframes shimmer {
+  0%   { opacity: 0.6; filter: brightness(0.95) blur(1px); }
+  50%  { opacity: 1;   filter: brightness(1.02) blur(0px); }
+  100% { opacity: 1; }
+}
+.animate-shimmer {
+  animation: shimmer 0.5s ease-in-out;
+}
+
+/* Buttons - better tap responsiveness */
 button {
   touch-action: manipulation;
 }
