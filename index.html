@@ -8,7 +8,7 @@
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Custom colors -->
+  <!-- Custom Tailwind Theme -->
   <script>
     tailwind.config = {
       theme: {
@@ -18,6 +18,12 @@
             jungleGold: '#F3C969',
             jungleRed: '#E94F37',
             jungleCream: '#FAF4E6',
+          },
+          animation: {
+            fadeIn: "fadeIn 0.45s ease-out",
+            slideIn: "slideIn 0.4s ease-out",
+            popIn: "popIn 0.45s ease-out",
+            shimmer: "shimmer 1s ease-in-out forwards",
           }
         }
       }
@@ -27,27 +33,79 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 
-<body class="min-h-screen flex flex-col items-center justify-center p-4 
-             bg-gradient-to-br from-jungleGreen via-jungleCream to-jungleGold">
+<body class="min-h-screen relative bg-gradient-to-br from-jungleGreen via-jungleCream to-jungleGold overflow-hidden">
 
-  <!-- WRAPPER -->
-  <div id="screen-wrapper" class="w-full max-w-md mx-auto text-center"></div>
+  <!-- SOFT JUNGLE VINES (top corners) -->
+  <img src="img/vines_top_left.png" class="absolute top-0 left-0 w-32 opacity-60 pointer-events-none">
+  <img src="img/vines_top_right.png" class="absolute top-0 right-0 w-32 opacity-60 pointer-events-none">
 
-  <!-- AUDIO -->
+  <!-- Floating Audio Replay Button -->
+  <button id="replayAudioBtn"
+    class="hidden fixed bottom-6 right-6 w-14 h-14 bg-white/90 border-2 border-jungleGreen rounded-full 
+           shadow-xl flex items-center justify-center text-jungleGreen text-2xl active:scale-90 transition">
+    🔊
+  </button>
+
+  <!-- Progress Dots -->
+  <div id="progressDots" class="fixed top-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+    <div class="dot w-3 h-3 rounded-full bg-white opacity-40"></div>
+    <div class="dot w-3 h-3 rounded-full bg-white opacity-40"></div>
+    <div class="dot w-3 h-3 rounded-full bg-white opacity-40"></div>
+    <div class="dot w-3 h-3 rounded-full bg-white opacity-40"></div>
+  </div>
+
+  <!-- MAIN WRAPPER -->
+  <div id="screen-wrapper" class="w-full max-w-md mx-auto text-center mt-12 p-4"></div>
+
+  <!-- AUDIO FILES -->
   <audio id="audio-welcome" src="audio/chef1_welcome.mp3"></audio>
+  <audio id="audio-intro" src="audio/chef1_welcome.mp3"></audio>
   <audio id="audio-cuisine" src="audio/chef2_cuisine.mp3"></audio>
   <audio id="audio-allergies" src="audio/chef3_allergies.mp3"></audio>
 
   <script>
     const wrapper = document.getElementById("screen-wrapper");
-    let step = 0;
+    const dots = document.querySelectorAll(".dot");
+    const replayBtn = document.getElementById("replayAudioBtn");
 
-    /* -------------------
-       UTIL: NARRATION BOX
-    ---------------------- */
+    let step = 0;
+    let currentAudio = null;
+
+    /* --------------------------
+       UTIL: UPDATE PROGRESS DOTS
+    --------------------------- */
+    function updateDots(activeIndex) {
+      dots.forEach((dot, i) => {
+        dot.style.opacity = i === activeIndex ? "1" : "0.35";
+        dot.style.transform = i === activeIndex ? "scale(1.25)" : "scale(1)";
+      });
+    }
+
+    /* --------------------------
+       UTIL: PLAY AUDIO + ENABLE REPLAY BUTTON
+    --------------------------- */
+    function playAudio(el) {
+      currentAudio = document.getElementById(el);
+      replayBtn.classList.remove("hidden");
+
+      // must wait for user interaction for autoplay to work on mobile
+      currentAudio.play().catch(() => {});
+    }
+
+    replayBtn.addEventListener("click", () => {
+      if (currentAudio) currentAudio.play().catch(()=>{});
+    });
+
+    /* --------------------------
+       UTIL: NARRATION BUBBLE
+    --------------------------- */
     function narrationBox(text) {
       return `
-        <div class="bg-white/80 rounded-xl p-4 mt-4 shadow-md text-left">
+        <div class="relative bg-white/80 rounded-xl p-4 mt-4 shadow-md text-left animate-slideIn">
+          <div class="absolute -top-3 left-6 w-0 h-0 
+                      border-l-8 border-r-8 border-b-8 border-transparent 
+                      border-b-white/80"></div>
+
           <p class="text-gray-700 leading-relaxed" id="narrationText">${text}</p>
 
           <button id="toggleNarration"
@@ -71,13 +129,17 @@
       });
     }
 
-    /* ---------- INTRO SCREEN ---------- */
+    /* ------------------------------------
+       0 — START SCREEN
+    ------------------------------------ */
     function renderStartScreen() {
+      updateDots(0);
+
       wrapper.innerHTML = `
         <div class="animate-fadeIn bg-white/90 backdrop-blur-lg rounded-3xl p-6 shadow-xl">
           
           <div class="flex justify-center mb-4">
-            <img src="img/chefRossi.png" alt="Chef Rossi"
+            <img src="img/chefRossi.png"
               class="w-40 h-40 object-cover rounded-full ring-4 ring-white shadow-2xl animate-popIn" />
           </div>
 
@@ -89,105 +151,155 @@
             class="w-full bg-jungleGreen text-white text-lg font-bold rounded-xl px-6 py-3 shadow-lg active:scale-95 transition mb-4">
             Tap to Begin
           </button>
+        </div>
+      `;
+
+      replayBtn.classList.add("hidden"); // no audio yet
+
+      document.getElementById("startBtn").addEventListener("click", () => {
+        nextStep();
+      });
+    }
+
+    /* ------------------------------------
+       1 — WELCOME SCREEN
+    ------------------------------------ */
+    function renderWelcomeScreen() {
+      updateDots(1);
+
+      wrapper.innerHTML = `
+        <div class="animate-shimmer bg-white/90 backdrop-blur-lg rounded-3xl p-6 shadow-xl">
+
+          <div class="flex justify-center mb-4 animate-popIn">
+            <img src="img/chefRossi.png"
+              class="w-36 h-36 object-cover rounded-full ring-4 ring-white shadow-xl" />
+          </div>
+
+          <h2 class="text-2xl font-bold text-jungleRed mb-2 animate-slideIn">
+            Welcome!
+          </h2>
+
+          <button id="continueWelcome"
+            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 shadow active:scale-95 mb-3">
+            Continue
+          </button>
 
           ${narrationBox(`
-            “Ciao, adventurer! I’m Chef Giovanni Rossi — 
-            your Globe-Trotting Gourmet! Welcome to Jungle Jim’s International 
-            Foodie Adventure. Tap to begin your journey!”
+            “Ciao, adventurer! I’m Chef Giovanni Rossi — your Globe-Trotting Gourmet!  
+            Welcome to Jungle Jim’s Foodie Adventure. Let’s explore the store and discover delicious new flavors!”
           `)}
         </div>
       `;
 
       enableNarrationToggle();
+      playAudio("audio-welcome");
 
-      document.getElementById("startBtn").addEventListener("click", () => {
-        document.getElementById("audio-welcome").play().catch(() => {});
+      document.getElementById("continueWelcome").addEventListener("click", () => {
         nextStep();
       });
     }
-
-    /* ---------- CUISINE SCREEN ---------- */
+    /* ------------------------------------
+       2 — CUISINE SELECT SCREEN
+    ------------------------------------ */
     function renderCuisineScreen() {
-      wrapper.innerHTML = `
-        <div class="animate-fadeIn bg-white/90 backdrop-blur-lg rounded-3xl p-6 shadow-xl">
+      updateDots(2);
 
-          <div class="flex justify-center mb-4">
-            <img src="img/chefRossi.png" alt="Chef Rossi"
+      wrapper.innerHTML = `
+        <div class="animate-shimmer bg-white/90 backdrop-blur-lg rounded-3xl p-6 shadow-xl">
+
+          <div class="flex justify-center mb-4 animate-popIn">
+            <img src="img/chefRossi.png"
               class="w-32 h-32 object-cover rounded-full ring-4 ring-white shadow-xl" />
           </div>
 
-          <h2 class="text-2xl font-semibold text-jungleRed mb-2">Choose Your Cuisine</h2>
+          <h2 class="text-2xl font-semibold text-jungleRed mb-2 animate-slideIn">
+            Choose Your Cuisine
+          </h2>
 
           <button id="chooseItalian"
-            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-2 shadow active:scale-95">
+            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-2 shadow active:scale-95 animate-slideIn">
             Italian
           </button>
 
-          <button disabled class="w-full bg-gray-300 text-gray-500 rounded-lg py-3 mt-2 opacity-50">
-            Mexican
-          </button>
-
-          <button disabled class="w-full bg-gray-300 text-gray-500 rounded-lg py-3 mt-2 opacity-50">
-            Chinese
-          </button>
-
           ${narrationBox(`
-            “Where in the world do your taste buds want to travel today? 
-            For this demo, choose Italian and let’s begin cooking up adventure!”
+            “Tell me, my friend… where do your taste buds wish to travel today?  
+            For this demo, tap ‘Italian’ and we’ll begin your culinary quest!”
           `)}
         </div>
       `;
 
       enableNarrationToggle();
+      playAudio("audio-cuisine");
 
       document.getElementById("chooseItalian").addEventListener("click", () => {
-        document.getElementById("audio-cuisine").play().catch(() => {});
         nextStep();
       });
     }
 
-    /* ---------- ALLERGY SCREEN ---------- */
+    /* ------------------------------------
+       3 — ALLERGY SCREEN
+    ------------------------------------ */
     function renderAllergyScreen() {
-      wrapper.innerHTML = `
-        <div class="animate-fadeIn bg-white/90 backdrop-blur-lg rounded-3xl p-6 shadow-xl">
+      updateDots(3);
 
-          <div class="flex justify-center mb-4">
-            <img src="img/chefRossi.png" alt="Chef Rossi"
+      wrapper.innerHTML = `
+        <div class="animate-shimmer bg-white/90 backdrop-blur-lg rounded-3xl p-6 shadow-xl">
+
+          <div class="flex justify-center mb-4 animate-popIn">
+            <img src="img/chefRossi.png"
               class="w-32 h-32 object-cover rounded-full ring-4 ring-white shadow-xl" />
           </div>
 
-          <h2 class="text-2xl font-semibold text-jungleRed mb-2">Any Allergies?</h2>
+          <h2 class="text-2xl font-semibold text-jungleRed mb-2 animate-slideIn">
+            Any Allergies?
+          </h2>
 
           <button id="noAllergiesBtn"
-            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-2 shadow active:scale-95">
+            class="w-full bg-jungleGreen text-white font-semibold rounded-lg py-3 mt-2 shadow active:scale-95 animate-slideIn">
             I do not have any allergies
           </button>
 
           ${narrationBox(`
-            “Before we start cooking, do you have any allergies I should know about? 
-            For this demo, select ‘I do not have any allergies.’”
+            “Before our adventure begins, I must ask — do you have any food allergies?  
+            For this demo, simply choose ‘I do not have any allergies.’”
           `)}
         </div>
       `;
 
       enableNarrationToggle();
+      playAudio("audio-allergies");
 
       document.getElementById("noAllergiesBtn").addEventListener("click", () => {
-        document.getElementById("audio-allergies").play().catch(() => {});
+        // small delay for button feedback
         setTimeout(() => {
           window.location.href = "hunt.html";
-        }, 800);
+        }, 600);
       });
     }
 
-    /* ---------- STEP CONTROL ---------- */
+    /* ------------------------------------
+       STEP CONTROLLER
+    ------------------------------------ */
     function nextStep() {
       step++;
-      if (step === 1) renderCuisineScreen();
-      if (step === 2) renderAllergyScreen();
+
+      if (step === 1) {
+        wrapper.classList.add("animate-slideIn");
+        renderWelcomeScreen();
+      }
+      else if (step === 2) {
+        wrapper.classList.add("animate-slideIn");
+        renderCuisineScreen();
+      }
+      else if (step === 3) {
+        wrapper.classList.add("animate-slideIn");
+        renderAllergyScreen();
+      }
     }
 
+    // Start app on Step 0
     renderStartScreen();
   </script>
+
 </body>
 </html>
