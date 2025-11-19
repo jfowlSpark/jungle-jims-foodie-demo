@@ -43,7 +43,6 @@
   </style>
 </head>
 
-<!-- allow scrolling -->
 <body class="min-h-screen relative bg-gradient-to-br from-jungleGreen via-jungleCream to-jungleGold">
 
   <!-- Vines -->
@@ -91,7 +90,6 @@
       const nextAudio = document.getElementById(id);
       if (!nextAudio) return;
 
-      // stop any previous clip
       if (currentAudio && !currentAudio.paused) {
         currentAudio.pause();
         currentAudio.currentTime = 0;
@@ -151,7 +149,7 @@
        CLUE SCREENS (1–8)
     --------------------- */
 
-    // 1) Pasta
+    // 1) Pasta – now requires a tap to play audio
     function renderStep1() {
       stepNum.textContent = "1";
       wrapper.innerHTML = `
@@ -167,6 +165,11 @@
             with elegant black script. Line it up in your camera view, then tap **Scan**.”
           `)}
 
+          <button id="playPastaClue"
+            class="mt-3 w-full bg-white text-jungleGreen border border-jungleGreen font-semibold rounded-lg py-2 shadow active:scale-95">
+            🔊 Hear Chef Rossi's clue
+          </button>
+
           ${cameraFrame("img/pasta.png", "Garofalo pasta")}
 
           <button id="scanBtn"
@@ -176,8 +179,9 @@
         </div>
       `;
 
+      document.getElementById("playPastaClue").onclick = () => playAudio("audio1");
       document.getElementById("scanBtn").onclick = () => handleScan(2);
-      playAudio("audio1");
+      // no auto-play here to avoid autoplay blocking
     }
 
     // 2) Fresh Spinach (produce)
